@@ -1,25 +1,27 @@
-import { useEffect, useState } from "react"
-import { IPollData } from "~/types/PollData";
+import { useState } from "react"
+import { IPollDataResponse } from "./types";
 import axios from "axios";
 
 const usePollData = (pollId: string) => {
-    const [pollData, setPollData] = useState<null | IPollData>(null);
+    const [pollData, setPollData] = useState<IPollDataResponse | null>(null)
 
-    useEffect(() => {
-        if (!pollData) {
-            axios.get(`http://localhost:3000/poll/${pollId}`)
-            .then(response => {
-                console.log('axios response', response);
-                const data = response?.data[0];
-                if (!data || data.length) return;
-                setPollData(data);
-            })
-            .catch(error => {
-                console.log('get poll data error', error);
-                setPollData(error);
-            })
-        }
-    });
+    const onPollDataFetchSuccess = (response) => {
+        console.log('axios response', response)
+        const data = response?.data[0]
+        if (!data || data.length) return
+        setPollData(data)
+    }
+
+    const onPollDataFetchError = (error) => {
+        console.log('get poll data error', error)
+        setPollData(error)
+    }
+
+    if (!pollData) {
+        axios.get(`http://localhost:3000/poll/${pollId}`)
+            .then(onPollDataFetchSuccess)
+            .catch(onPollDataFetchError)
+    }
 
     return pollData;
 }

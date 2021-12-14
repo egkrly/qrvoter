@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -38,4 +37,4 @@ const PublicNavigation = () => {
     )
 }
 
-export default PublicNavigation;
+export default PublicNavigation

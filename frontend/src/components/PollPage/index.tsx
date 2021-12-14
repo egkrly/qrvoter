@@ -1,7 +1,9 @@
-import { useParams } from "react-router";
-import { usePollData } from "~/hooks";
+import { useParams } from 'react-router'
 
-interface IPollParams {
+import { usePollData } from '~/hooks'
+import { PublicPoll } from '~/components'
+
+interface IPollPageParams {
     id: string
 }
 
@@ -30,23 +32,13 @@ const ArchivedPoll = ({ name }) => {
 }
 
 const PollPage = () => {
-    const { id } = useParams<IPollParams>();
-    const pollData = usePollData(id);
-    if (!pollData) return <Loading />;
-    if (pollData.error) return <FetchError error={pollData.error} />;
-    const { name, startDate, endDate, archived } = pollData;
+    const { id } = useParams<IPollPageParams>()
+    const { name, questions, isLoading, isError, error, archived } = usePollData(id)
 
-    // TODO: put this logic to backend.
-    // we should only receive the name of the poll from BE if it's archived.
-    return !archived ? (
-        <>
-            <h1>{name}</h1>
-            <b>Start: </b> {startDate}<br></br>
-            <b>End: </b> {endDate || 'no data'}<br></br>
-        </>
-    ) : (
-        <ArchivedPoll name={name} />
-    )
+    return archived ? <ArchivedPoll name={name} />
+        : isLoading ? <Loading />
+        : isError ? <FetchError error={error} />
+        : <PublicPoll name={name} questions={questions} />
 }
 
-export default PollPage;
+export default PollPage
