@@ -37,6 +37,7 @@
             "error",
             "never"
         ],
-        "eol-last": ["always"]
+        "eol-last": ["always"],
+        "no-console": ["error"]
     }
 }
